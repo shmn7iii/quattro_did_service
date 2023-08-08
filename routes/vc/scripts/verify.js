@@ -5,7 +5,16 @@ async function verifyVc(vcJwt) {
   const { payload } = decodeJWT(vcJwt, false);
 
   const issuerDidUri = payload.iss;
-  const issuerDid = await resolve(issuerDidUri);
+
+  let issuerDid;
+  try {
+    issuerDid = await resolve(issuerDidUri);
+  } catch (error) {
+    return {
+      error: "DID can't be resolved: " + issuerDidUri,
+    };
+  }
+
   const issuerPublicKeyJwk =
     issuerDid.didDocument.verificationMethod[0].publicKeyJwk;
 

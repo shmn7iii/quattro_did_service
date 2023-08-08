@@ -6,7 +6,16 @@ async function verifyVp(vpJwt) {
   const { payload } = decodeJWT(vpJwt, false);
 
   const holderDidUri = payload.iss;
-  const holderDid = await resolve(holderDidUri);
+
+  let holderDid;
+  try {
+    holderDid = await resolve(holderDidUri);
+  } catch (error) {
+    return {
+      error: "DID can't be resolved: " + holderDidUri,
+    };
+  }
+
   const holderPublicKeyJwk =
     holderDid.didDocument.verificationMethod[0].publicKeyJwk;
 
