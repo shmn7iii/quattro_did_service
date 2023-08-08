@@ -19,13 +19,14 @@ async function verifyVp(vpJwt) {
   const holderPublicKeyJwk =
     holderDid.didDocument.verificationMethod[0].publicKeyJwk;
 
+  // TODO: verify nbf, iat, exp
   const vpVerifyResult = await verify({
     jws: vpJwt,
     publicJwk: holderPublicKeyJwk,
   });
 
   // VC Verify
-  // TODO: loop
+  // TODO: loop all vc
   const vcJwt = payload.vp.verifiableCredential[0];
   const { verified: vcVerifyResult, vc, issuerDid } = await verifyVc(vcJwt);
 

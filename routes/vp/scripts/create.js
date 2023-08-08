@@ -15,6 +15,7 @@ async function createVp(vcJwt, holderDid, holderPrivateKey) {
   const issuanceTime = new Date();
   const issuanceUnixTime = Math.floor(issuanceTime.getTime() / 1000);
 
+  // TODO: add expire date
   const vpPayload = {
     jti: "ID of VP",
     nbf: issuanceUnixTime,
