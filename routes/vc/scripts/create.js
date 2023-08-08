@@ -36,7 +36,7 @@ async function createVc(subjectDid, issuerDid, issuerPrivateKey) {
   const vcJwt = await createVerifiableCredentialJwt(vcPayload, jwtIssuer);
 
   return {
-    jwt: vcJwt,
+    vcJwt: vcJwt,
   };
 }
 
