@@ -22,10 +22,8 @@ async function verifyVc(vcJwt) {
     };
   }
 
-  const issuerPublicKeyJwk =
-    issuerDid.didDocument.verificationMethod[0].publicKeyJwk;
-
   // Verify JWT
+  const issuerPublicKeyJwk = issuerDid.didDocument.verificationMethod[0].publicKeyJwk;
   const jwtVerifyResult = await verify({
     jws: vcJwt,
     publicJwk: issuerPublicKeyJwk,

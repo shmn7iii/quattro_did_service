@@ -2,9 +2,7 @@ import { ES256KSigner, hexToBytes } from "did-jwt";
 import { createVerifiablePresentationJwt } from "did-jwt-vc";
 
 async function createVp(vcJwt, holderDid, holderPrivateKey, aud, nonce) {
-  const privateKeyHex = Buffer.from(holderPrivateKey.d, "base64").toString(
-    "hex"
-  );
+  const privateKeyHex = Buffer.from(holderPrivateKey.d, "base64").toString("hex");
 
   const signer = ES256KSigner(hexToBytes(privateKeyHex));
   const jwtIssuer = {

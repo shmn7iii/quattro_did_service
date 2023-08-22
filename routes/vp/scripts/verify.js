@@ -29,11 +29,8 @@ async function verifyVp(vpJwt, aud, nonce) {
     };
   }
 
-  const holderPublicKeyJwk =
-    holderDid.didDocument.verificationMethod[0].publicKeyJwk;
-
-  // TODO: verify nbf, iat, exp
   // Verify JWT
+  const holderPublicKeyJwk = holderDid.didDocument.verificationMethod[0].publicKeyJwk;
   const jwtVerifyResult = await verify({
     jws: vpJwt,
     publicJwk: holderPublicKeyJwk,

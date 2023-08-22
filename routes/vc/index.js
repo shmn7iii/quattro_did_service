@@ -12,11 +12,7 @@ router.post("/create", async function (req, res, next) {
   const subjectDid = req.body.subjectDid;
   const issuerDid = req.body.issuerDid;
   const issuerPrivateKey = req.body.issuerPrivateKey;
-  if (
-    subjectDid == undefined ||
-    issuerDid == undefined ||
-    issuerPrivateKey == undefined
-  ) {
+  if (subjectDid == undefined || issuerDid == undefined || issuerPrivateKey == undefined) {
     res.status(400).json({ error: "Invalid parameter" });
     return;
   }

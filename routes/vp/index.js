@@ -12,11 +12,7 @@ router.post("/create", async function (req, res, next) {
   const vcJwt = req.body.vcJwt;
   const holderDid = req.body.holderDid;
   const holderPrivateKey = req.body.holderPrivateKey;
-  if (
-    vcJwt == undefined ||
-    holderDid == undefined ||
-    holderPrivateKey == undefined
-  ) {
+  if (vcJwt == undefined || holderDid == undefined || holderPrivateKey == undefined) {
     res.status(400).json({ error: "Invalid parameter" });
     return;
   }
