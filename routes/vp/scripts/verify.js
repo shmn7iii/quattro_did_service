@@ -2,11 +2,24 @@ import { decodeJWT } from "did-jwt";
 import { resolve, verify } from "@decentralized-identity/ion-tools";
 import verifyVc from "../../vc/scripts/verify.js";
 
-async function verifyVp(vpJwt) {
+async function verifyVp(vpJwt, aud, nonce) {
   const { payload } = decodeJWT(vpJwt, false);
 
   const holderDidUri = payload.iss;
+  const expireUnixTimestamp = payload.exp;
 
+  // Verify Expire time
+  const currentTime = new Date();
+  const expireTime = new Date(expireUnixTimestamp * 1000);
+  const expVerifyResult = currentTime <= expireTime;
+
+  // Verify aud
+  const audVerifyResult = payload.aud == aud;
+
+  // Verify nonce
+  const nonceVerifyResult = payload.nonce == nonce;
+
+  // Resolve DID
   let holderDid;
   try {
     holderDid = await resolve(holderDidUri);
@@ -20,18 +33,19 @@ async function verifyVp(vpJwt) {
     holderDid.didDocument.verificationMethod[0].publicKeyJwk;
 
   // TODO: verify nbf, iat, exp
-  const vpVerifyResult = await verify({
+  // Verify JWT
+  const jwtVerifyResult = await verify({
     jws: vpJwt,
     publicJwk: holderPublicKeyJwk,
   });
 
-  // VC Verify
+  // Verify VC
   // TODO: loop all vc
   const vcJwt = payload.vp.verifiableCredential[0];
   const { verified: vcVerifyResult, vc, issuerDid } = await verifyVc(vcJwt);
 
   return {
-    verified: vpVerifyResult && vcVerifyResult,
+    verified: expVerifyResult && audVerifyResult && nonceVerifyResult && jwtVerifyResult && vcVerifyResult,
     vp: payload.vp,
     holderDid: holderDid,
     vc: vc,

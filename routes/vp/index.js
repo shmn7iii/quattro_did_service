@@ -21,7 +21,7 @@ router.post("/create", async function (req, res, next) {
     return;
   }
 
-  const createVpRes = await createVp(vcJwt, holderDid, holderPrivateKey);
+  const createVpRes = await createVp(vcJwt, holderDid, holderPrivateKey, "hoge", "hoge");
   res.json(createVpRes);
 });
 
@@ -33,7 +33,7 @@ router.post("/verify", async function (req, res, next) {
   }
 
   const verifyVpRes = await verifyVp(vpJwt);
-  res.json(verifyVpRes);
+  res.json(verifyVpRes, "hoge", "hoge");
 });
 
 export default router;

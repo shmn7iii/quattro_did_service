@@ -13,13 +13,18 @@ async function createVc(subjectDid, issuerDid, issuerPrivateKey) {
   };
 
   const issuanceTime = new Date();
-  const issuanceUnixTime = Math.floor(issuanceTime.getTime() / 1000);
+  const issuanceUnixTimestamp = Math.floor(issuanceTime.getTime() / 1000);
+  const expireTime = new Date();
+  expireTime.setFullYear(expireTime.getFullYear() + 5);
+  const expireUnixTimestamp = Math.floor(expireTime.getTime() / 1000);
 
+  // TODO: jti
   const vcPayload = {
     sub: subjectDid,
     jti: "ID of VC",
-    nbf: issuanceUnixTime,
-    iat: issuanceUnixTime,
+    nbf: issuanceUnixTimestamp,
+    iat: issuanceUnixTimestamp,
+    exp: expireUnixTimestamp,
     vc: {
       "@context": ["https://www.w3.org/2018/credentials/v1"],
       type: ["VerifiableCredential"],

@@ -1,7 +1,7 @@
 import { ES256KSigner, hexToBytes } from "did-jwt";
 import { createVerifiablePresentationJwt } from "did-jwt-vc";
 
-async function createVp(vcJwt, holderDid, holderPrivateKey) {
+async function createVp(vcJwt, holderDid, holderPrivateKey, aud, nonce) {
   const privateKeyHex = Buffer.from(holderPrivateKey.d, "base64").toString(
     "hex"
   );
@@ -13,13 +13,19 @@ async function createVp(vcJwt, holderDid, holderPrivateKey) {
   };
 
   const issuanceTime = new Date();
-  const issuanceUnixTime = Math.floor(issuanceTime.getTime() / 1000);
+  const issuanceUnixTimestamp = Math.floor(issuanceTime.getTime() / 1000);
+  const expireTime = new Date();
+  expireTime.setMinutes(expireTime.getMinutes() + 10);
+  const expireUnixTimestamp = Math.floor(expireTime.getTime() / 1000);
 
-  // TODO: add expire date
+  // TODO: jti
   const vpPayload = {
     jti: "ID of VP",
-    nbf: issuanceUnixTime,
-    iat: issuanceUnixTime,
+    aud: aud, // ID of Audience, ex) Merchant ID
+    nbf: issuanceUnixTimestamp,
+    iat: issuanceUnixTimestamp,
+    exp: expireUnixTimestamp,
+    nonce: nonce,
     vp: {
       "@context": ["https://www.w3.org/2018/credentials/v1"],
       type: ["VerifiablePresentation"],

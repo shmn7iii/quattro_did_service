@@ -5,7 +5,14 @@ async function verifyVc(vcJwt) {
   const { payload } = decodeJWT(vcJwt, false);
 
   const issuerDidUri = payload.iss;
+  const expireUnixTimestamp = payload.exp;
 
+  // Verify Expire time
+  const currentTime = new Date();
+  const expireTime = new Date(expireUnixTimestamp * 1000);
+  const expVerifyResult = currentTime <= expireTime;
+
+  // Resolve DID
   let issuerDid;
   try {
     issuerDid = await resolve(issuerDidUri);
@@ -18,13 +25,14 @@ async function verifyVc(vcJwt) {
   const issuerPublicKeyJwk =
     issuerDid.didDocument.verificationMethod[0].publicKeyJwk;
 
-  const verifyResult = await verify({
+  // Verify JWT
+  const jwtVerifyResult = await verify({
     jws: vcJwt,
     publicJwk: issuerPublicKeyJwk,
   });
 
   return {
-    verified: verifyResult,
+    verified: expVerifyResult && jwtVerifyResult,
     vc: payload.vc,
     issuerDid: issuerDid,
   };
