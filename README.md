@@ -50,7 +50,7 @@ $ npm start
   }
   ```
 
-### [GET] /did/create/:did
+### [GET] /did/resolve/:did
 
 - return
   ```json
@@ -118,8 +118,8 @@ JWT による VC の表現については以下参照
 - params
   ```json
   {
-    "subjectDid": "hoge",
-    "issuerDid": "did:ion:hoge",
+    "subjectDid": "did:ion:hoge",
+    "issuerDid": "did:ion:fuga",
     "issuerPrivateKey": {
       "kty": "EC",
       "crv": "secp256k1",
