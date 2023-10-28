@@ -5,6 +5,7 @@ async function verifyVc(vcJwt) {
   const { payload } = decodeJWT(vcJwt, false);
 
   const issuerDidUri = payload.iss;
+  const holderDidUri = payload.sub;
   const expireUnixTimestamp = payload.exp;
 
   // Verify Expire time
@@ -22,6 +23,15 @@ async function verifyVc(vcJwt) {
     };
   }
 
+  let holderDid;
+  try {
+    holderDid = await resolve(holderDidUri);
+  } catch (error) {
+    return {
+      error: "DID can't be resolved: " + holderDidUri,
+    };
+  }
+
   // Verify JWT
   const issuerPublicKeyJwk = issuerDid.didDocument.verificationMethod[0].publicKeyJwk;
   const jwtVerifyResult = await verify({
@@ -33,6 +43,7 @@ async function verifyVc(vcJwt) {
     verified: expVerifyResult && jwtVerifyResult,
     vc: payload.vc,
     issuerDid: issuerDid,
+    holderDid: holderDid,
   };
 }
 

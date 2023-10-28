@@ -1,8 +1,4 @@
-import {
-  DID,
-  generateKeyPair,
-  anchor,
-} from "@decentralized-identity/ion-tools";
+import { DID, generateKeyPair, anchor } from "@decentralized-identity/ion-tools";
 import crypto from "node:crypto";
 global.crypto ??= crypto;
 
@@ -22,11 +18,10 @@ async function createDid(services) {
     },
   });
 
-  const createRequest = await did.generateRequest(0);
-  const anchorResponse = await anchor(createRequest);
+  const longFormURI = await did.getURI();
 
   return {
-    did: JSON.parse(anchorResponse),
+    did: longFormURI,
     signingKey: signingKey,
   };
 }
